@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
+import requests
 
 class FavoriteLinksManager(models.Model):
     def get_queryset(self):
@@ -36,3 +38,13 @@ class Link(models.Model):
         verbose_name = 'link'
         verbose_name_plural = 'links'
         ordering = ['-date_created']
+
+    def save(self, *args, **kwargs):
+        if not self.shortened_url:
+            base_url = 'https://is.gd/create.php?format=json&url='
+            response = requests.get(base_url + self.url)
+            self.shortened_url = response.json()['shorturl']
+        super(Link, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('linksapp:detail', kwargs={'pk': self.pk})

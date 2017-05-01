@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Index Page{% endblock %}
+
+{% block content %}
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Attribute</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+          <td>Title</td>
+        <td>{{ link.title }}</td>
+      </tr>
+      <tr>
+          <td>URL</td>
+        <td><a href="{{ link.url }}" target="_blank">{{link.url }}</a></td>
+      </tr>
+        <td>Description</td>
+        <td>{{ link.description }}</td>
+      <tr>
+          <td>Date Modified</td>
+          <td>{{ link.date_modified }}</td>
+      </tr>
+    </tbody>
+</table>
+
+<a href="{% url "linksapp:update" link.id %}" class="btn btn-primary" role="button">Edit</a>
+<a href="{% url "linksapp:delete" link.id %}" class="btn btn-danger" role="button">Delete</a>
+
+{% endblock %}

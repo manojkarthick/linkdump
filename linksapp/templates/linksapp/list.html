@@ -1,0 +1,25 @@
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>URL</th>
+        <th>Short URL</th>
+          <th>Last Modified</th>
+      </tr>
+    </thead>
+    {% for link in links %}
+    <tbody>
+      <tr>
+          <td><a href="{% url 'linksapp:detail' link.pk %}" >{{ link.title }}</a></td>
+        <td><a href="{{ link.url }}" target="_blank">{{link.url }}</a></td>
+          {% if link.shortened_url %}
+            <td><a href="{{ link.shortened_url }}" target="_blank">{{link.shortened_url }}</a></td>
+          {% else %}
+            <td></td>
+          {% endif %}
+          <td>{{ link.date_modified }}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+
+</table>

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{% block title %}Create new link{% endblock %}
+
+{% block content %}
+<h3> Update Link </h3><form action="" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Update" />
+</form>
+{% endblock %}
