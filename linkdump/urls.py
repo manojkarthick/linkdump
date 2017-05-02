@@ -19,7 +19,7 @@ from django.conf.urls import include
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    url(r'^$',RedirectView.as_view(url='/links/',permanent=True )),
+    url(r'^$', RedirectView.as_view(url='/links/', permanent=True)),
     url(r'^admin/', admin.site.urls),
-    url(r'^links/',include('linksapp.urls')),
+    url(r'^links/', include('linksapp.urls')),
 ]
