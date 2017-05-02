@@ -4,6 +4,7 @@
 {% block title %}Index Page{% endblock %}
 
 {% block content %}
+<h3>Link Details</h3>
 <table class="table table-striped">
     <thead>
       <tr>
@@ -25,6 +26,10 @@
       <tr>
           <td>Date Modified</td>
           <td>{{ link.date_modified }}</td>
+      </tr>
+      <tr>
+          <td>Hits</td>
+          <td>{{ link.hits }}</td>
       </tr>
     </tbody>
 </table>

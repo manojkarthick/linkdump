@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^create/$',views.LinkCreate.as_view(),name='create'),
     url(r'^(?P<pk>\d+)/delete/$',views.LinkDelete.as_view(),name='delete'),
     url(r'^(?P<pk>\d+)/update/$',views.LinkUpdate.as_view(),name='update'),
+    url(r'^(?P<link_id>\d+)/redirect/$',views.increment_hits,name='increment_hits'),
 ]

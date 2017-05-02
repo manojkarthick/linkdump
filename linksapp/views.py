@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from .models import Link,Tag
 from django.views import generic
 from django.views.generic.edit import CreateView
@@ -39,3 +38,10 @@ class LinkUpdate(UpdateView):
     template_name = 'linksapp/update.html'
     fields = ['title','url','description','tags','shortened_url']
     success_url = reverse_lazy('linksapp:index')
+
+def increment_hits(request,link_id):
+    link = Link.objects.get(pk=link_id)
+    link.hits += 1
+    link.save()
+    return redirect(link.url)
+
