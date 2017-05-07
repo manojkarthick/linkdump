@@ -19,7 +19,7 @@
       </tr>
       <tr>
           <td>URL</td>
-        <td><a href="{{ link.url }}" target="_blank">{{link.url }}</a></td>
+        <td><a href="{% url 'linksapp:increment_hits' link.id %}" target="_blank">{{link.url }}</a></td>
       </tr>
         <td>Description</td>
         <td>{{ link.description }}</td>

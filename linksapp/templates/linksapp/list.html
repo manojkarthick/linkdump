@@ -1,4 +1,4 @@
-<table class="table table-striped">
+<table class="table table-striped" id="latest_added">
     <thead>
       <tr>
         <th>Title</th>
@@ -7,9 +7,9 @@
           <th>Last Modified</th>
       </tr>
     </thead>
-    {% for link in links %}
     <tbody>
-      <tr>
+    {% for link in links %}
+    <tr>
           <td><a href="{% url 'linksapp:detail' link.pk %}" >{{ link.title }}</a></td>
           <td><a href="{% url 'linksapp:increment_hits' link.id %}" target="_blank">{{link.url }}</a></td>
           {% if link.shortened_url %}
@@ -18,8 +18,8 @@
             <td></td>
           {% endif %}
           <td>{{ link.date_modified }}</td>
-      </tr>
-    </tbody>
+    </tr>
     {% endfor %}
+    </tbody>
 
 </table>

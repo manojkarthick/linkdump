@@ -10,4 +10,7 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/delete/$',views.LinkDelete.as_view(),name='delete'),
     url(r'^(?P<pk>\d+)/update/$',views.LinkUpdate.as_view(),name='update'),
     url(r'^(?P<link_id>\d+)/redirect/$',views.increment_hits,name='increment_hits'),
+	url(r'^quickadd/$',views.quickadd,name='quick_add_view'),
+	url(r'^update_table_items/$',views.update_index_table,name='update_items'),
+	url(r'^tag_hierarchy/$',views.set_tag_hrchy,name='tag_hierarchy'),
 ]
