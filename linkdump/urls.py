@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 from linksapp import views as linksapp_views
 
 urlpatterns = [
-    url(r'^$',RedirectView.as_view(url='/links/',permanent=True )),
+    url(r'^$', RedirectView.as_view(url='/links/', permanent=True)),
     url(r'^admin/', admin.site.urls),
     url(r'^links/',include('linksapp.urls')),
     url(r'^login/$',auth_views.login, name='login'),

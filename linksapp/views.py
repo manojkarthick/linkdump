@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Link,Tag
+from .models import Link
 from django.views import generic
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
@@ -73,9 +73,10 @@ class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Link
     template_name = 'linksapp/detail.html'
 
+
 class LinkCreate(LoginRequiredMixin,CreateView):
     model = Link
-    fields = ['title','url','description','tags','shortened_url']
+    fields = ['title', 'url', 'description', 'tags', 'shortened_url']
     template_name = 'linksapp/create.html'
 
 class LinkDelete(LoginRequiredMixin,DeleteView):
@@ -86,7 +87,7 @@ class LinkDelete(LoginRequiredMixin,DeleteView):
 class LinkUpdate(LoginRequiredMixin,UpdateView):
     model = Link
     template_name = 'linksapp/update.html'
-    fields = ['title','url','description','tags','shortened_url']
+    fields = ['title', 'url', 'description', 'tags', 'shortened_url']
     success_url = reverse_lazy('linksapp:index')
 
 @login_required
@@ -110,9 +111,3 @@ def signup(request):
         form = SignUpForm()
     
     return render(request,'registration/signup.html',{'form': form})
-
-
-
-
-
-
