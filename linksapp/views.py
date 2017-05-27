@@ -22,7 +22,7 @@ def quickadd(request):
         url = request.POST['the_url']
         r = requests.get(url)
         html = BeautifulSoup(r.text,'html.parser')
-        if html.title.text:
+        if html.title and html.title.text:
             title = html.title.text
         else:
             title = url

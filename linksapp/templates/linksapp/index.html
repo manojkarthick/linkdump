@@ -1,137 +1,155 @@
-{% extends 'base.html' %}
+	{% extends 'base.html' %}
 
 
-{% block title %}Detail Page{% endblock %}
+	{% block title %}Detail Page{% endblock %}
 
-{% block content %}
+	{% block content %}
 
-<h2>Most recent links</h2>
+	<h2>Most recent links</h2>
 
-&nbsp
+	&nbsp
 
-<h4>Quick Add</h4>
+	<h4>Quick Add</h4>
 
-<form method="POST" role="form" id="post-form">
-{% csrf_token %}
-<div class="input-group">
-	<input type="url" class="form-control" id="quick_add_url" placeholder="Enter URL here" required>
-	<span class="input-group-btn">
-		<button type="submit" id="dump-btn" class="btn btn-primary">Dump</button>
-	</span>
-</div>
+	<form method="POST" role="form" id="post-form">
+	{% csrf_token %}
+	<div class="input-group">
+		<input type="url" class="form-control" id="quick_add_url" placeholder="Enter URL here" required>
+		<span class="input-group-btn">
+			<button type="submit" id="dump-btn" class="btn btn-primary">Dump</button>
+		</span>
+	</div>
+	<div id="results" style="display: None">
+		<div id="being-dumped" class="alert alert-info col-sm-12" style="display: None">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<strong id="being-dumped-text"></strong>
+		</div>
+		<div id="dump-success" class="alert alert-success col-sm-12" style="display: None">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<strong id="dump-success-text">Title!</strong>
+		</div>
+		<div id="dump-failure" class="alert alert-danger  col-sm-12" style="display: None">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<strong id="dump-failure-text">Title!</strong>
+		</div>
+    </div>
 
-<div id="results">
-	
-</div>
+	</form>
 
-</form>
+	&nbsp
 
-&nbsp
-
-{% include "linksapp/list.html" %}
+	{% include "linksapp/list.html" %}
 
 
-{% endblock %}
+	{% endblock %}
 
 
-{% block javascript %}
-<script type="text/javascript">
-$('#post-form').on('submit', function(event){
-    event.preventDefault();
-    console.log("form submitted!")  // sanity check
-    $('#results').html('<div class="alert alert-info" role="alert">Please wait.. Your link is being dumped.</div>')
-    quick_add_ajax();
-});
+	{% block javascript %}
+	<script type="text/javascript">
+	$('#post-form').on('submit', function(event){
+	    event.preventDefault();
+	    console.log("form submitted!")  // sanity check
+	    $('#results').css('display','initial')
+	    $('#being-dumped').css('display','initial')
+	    $('#being-dumped-text').html('Please wait.. Your link is being dumped.')
+	    quick_add_ajax();
+	});
 
-//For updating the table:
-function update_table_items(update_items){
-    console.log("Updating");
-    $('#latest_added').html('').load(
-        "{% url 'linksapp:update_items' %}"
-    ); // <--- this code instead of $.ajax(lala)
-}
+	//For updating the table:
+	function update_table_items(update_items){
+	    console.log("Updating");
+	    $('#latest_added').html('').load(
+	        "{% url 'linksapp:update_items' %}"
+	    ); // <--- this code instead of $.ajax(lala)
+	}
 
-// AJAX for posting
-function quick_add_ajax() {
-    console.log("AJAX works."); // sanity check
-    var urlval = $('#quick_add_url').val()
-    console.log(urlval)
+	// AJAX for posting
+	function quick_add_ajax() {
+	    console.log("AJAX works."); // sanity check
+	    var urlval = $('#quick_add_url').val()
+	    console.log(urlval)
 
-    $.ajax({
-        url : "/links/quickadd/", // the endpoint
-        type : "POST", // http method
-        data : { the_url : urlval }, // data sent with the post request
+	    $.ajax({
+	        url : "/links/quickadd/", // the endpoint
+	        type : "POST", // http method
+	        data : { the_url : urlval }, // data sent with the post request
 
-        // handle a successful response
-        success : function(json) {
-            $('#quick_add_url').val(''); // remove the value from the input
-            console.log(json); // log the returned json to the console
-            console.log("success"); // another sanity check
-            $('#results').html('<div class="alert alert-success" role="alert">Link successfully dumped!</center></div>');
-            update_table_items();
-        },
+	        // handle a successful response
+	        success : function(json) {
+	            $('#quick_add_url').val(''); // remove the value from the input
+	            console.log(json); // log the returned json to the console
+	            console.log("success"); // another sanity check
+        	    $('#results').css('display','initial')
+	    	    $('#being-dumped').css('display','None')
+	    	    $('#dump-success').css('display','initial')
+	            $('#dump-success-text').html('Link successfully dumped!');
+	            update_table_items();
+	        },
 
-        // handle a non-successful response
-        error : function(xhr,errmsg,err) {
-            $('#results').html('<div class="alert alert-success" role="alert">Oh snap! We have encountered an error.</center></div>');
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        }
-    });
-};
+	        // handle a non-successful response
+	        error : function(xhr,errmsg,err) {
+    		    $('#results').css('display','initial')
+	    	    $('#being-dumped').css('display','None')
+	    	    $('#dump-failure').css('display','initial')
+	            $('#dump-failure-text').html('Oh snap! We have encountered an error.');
+	            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+	        }
+	    });
+	};
 
-// For CSRF tokens
-$(function() {
-    // This function gets cookie with a given name
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    var csrftoken = getCookie('csrftoken');
+	// For CSRF tokens
+	$(function() {
+	    // This function gets cookie with a given name
+	    function getCookie(name) {
+	        var cookieValue = null;
+	        if (document.cookie && document.cookie != '') {
+	            var cookies = document.cookie.split(';');
+	            for (var i = 0; i < cookies.length; i++) {
+	                var cookie = jQuery.trim(cookies[i]);
+	                // Does this cookie string begin with the name we want?
+	                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                    break;
+	                }
+	            }
+	        }
+	        return cookieValue;
+	    }
+	    var csrftoken = getCookie('csrftoken');
 
-    /*
-    The functions below will create a header with csrftoken
-    */
+	    /*
+	    The functions below will create a header with csrftoken
+	    */
 
-    function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
-    function sameOrigin(url) {
-        // test that a given url is a same-origin URL
-        // url could be relative or scheme relative or absolute
-        var host = document.location.host; // host + port
-        var protocol = document.location.protocol;
-        var sr_origin = '//' + host;
-        var origin = protocol + sr_origin;
-        // Allow absolute or scheme relative URLs to same origin
-        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-            // or any other URL that isn't scheme relative or absolute i.e relative.
-            !(/^(\/\/|http:|https:).*/.test(url));
-    }
+	    function csrfSafeMethod(method) {
+	        // these HTTP methods do not require CSRF protection
+	        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	    }
+	    function sameOrigin(url) {
+	        // test that a given url is a same-origin URL
+	        // url could be relative or scheme relative or absolute
+	        var host = document.location.host; // host + port
+	        var protocol = document.location.protocol;
+	        var sr_origin = '//' + host;
+	        var origin = protocol + sr_origin;
+	        // Allow absolute or scheme relative URLs to same origin
+	        return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+	            (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+	            // or any other URL that isn't scheme relative or absolute i.e relative.
+	            !(/^(\/\/|http:|https:).*/.test(url));
+	    }
 
-    $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                // Send the token to same-origin, relative URLs only.
-                // Send the token only if the method warrants CSRF protection
-                // Using the CSRFToken value acquired earlier
-                xhr.setRequestHeader("X-CSRFToken", csrftoken);
-            }
-        }
-    });
+	    $.ajaxSetup({
+	        beforeSend: function(xhr, settings) {
+	            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+	                // Send the token to same-origin, relative URLs only.
+	                // Send the token only if the method warrants CSRF protection
+	                // Using the CSRFToken value acquired earlier
+	                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+	            }
+	        }
+	    });
 
-});
-</script>
-{% endblock %}
+	});
+	</script>
+	{% endblock %}
